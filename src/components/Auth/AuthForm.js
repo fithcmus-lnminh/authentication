@@ -28,26 +28,28 @@ const AuthForm = () => {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAgzV9EzpzLJqUxrBSbSBnHXdq10yXniKY";
     }
-
     fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
+      body: JSON.stringify({
         email: enteredEmail,
         password: enteredPassword,
         returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
       },
     })
       .then((res) => {
+        setIsLoading(false);
         if (res.ok) {
           return res.json();
         } else {
-          setIsLoading(false);
           return res.json().then((data) => {
             let errorMessage = "Authentication failed!";
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-            }
+            // if (data && data.error && data.error.message) {
+            //   errorMessage = data.error.message;
+            // }
+
             throw new Error(errorMessage);
           });
         }
@@ -55,8 +57,8 @@ const AuthForm = () => {
       .then((data) => {
         console.log(data);
       })
-      .catch((error) => {
-        alert(error.message);
+      .catch((err) => {
+        alert(err.message);
       });
   };
 
